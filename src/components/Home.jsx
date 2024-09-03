@@ -5,7 +5,7 @@ import { FaUserTie, FaUserClock } from "react-icons/fa";
 const Home = () => {
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center text-white">
-      <h1 className="text-4xl font-bold mb-24">GesanG Absensi</h1>
+      <h1 className="text-4xl font-bold mb-12">GesanG Absensi</h1>
       <div className="space-y-4">
         {/* Page 1: Karyawan Bulanan */}
         <Link
