@@ -80,7 +80,7 @@ function TermsAndConditions() {
           </p>
           <p>
             <b>2.</b> Check In paling lambat jam 07:05 pagi, checkout paling
-            cepat jam 15:00.
+            cepat jam 16:00.
           </p>
           <p>
             <b>3.</b> Bila Karyawan telat Check-in atau terlalu cepat checkout,
