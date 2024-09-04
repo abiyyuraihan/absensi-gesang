@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Clock from "./Clock";
+import { formatInTimeZone } from "date-fns-tz";
+
+const timeZone = "Asia/Jakarta"; // Tentukan timezone kamu
 
 function EmployeeAttendance() {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -48,15 +51,21 @@ function EmployeeAttendance() {
     try {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
-
       const token = localStorage.getItem("token");
 
-      // Tangkap waktu sekarang secara otomatis
-      const currentTime = new Date().toISOString().slice(11, 16);
+      // Tangkap waktu sekarang
+      const now = new Date();
+
+      // Format waktu di timezone yang kamu tentukan menggunakan formatInTimeZone
+      const formattedTime = formatInTimeZone(
+        now,
+        timeZone,
+        "yyyy-MM-dd HH:mm:ss zzzz"
+      );
 
       const response = await axios.put(
         `${process.env.REACT_APP_DATABASE_URL}/api/attendance/${type}`,
-        { latitude, longitude, time: currentTime },
+        { latitude, longitude, time: formattedTime },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,9 +75,9 @@ function EmployeeAttendance() {
 
       if (type === "checkin") {
         setIsCheckedIn(true);
-        setCheckInTime(currentTime);
+        setCheckInTime(formattedTime);
       } else {
-        setCheckOutTime(currentTime);
+        setCheckOutTime(formattedTime);
       }
       setError(null);
     } catch (error) {
