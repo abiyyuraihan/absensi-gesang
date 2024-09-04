@@ -51,11 +51,21 @@ function EmployeeAttendanceKhusus() {
 
       const token = localStorage.getItem("token");
 
-      const currentTime = new Date().toISOString().slice(11, 16);
+      const currentDate = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD format
+      const currentTime = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }); // HH:MM format
+
+      console.log("Sending date and time to backend:", {
+        currentDate,
+        currentTime,
+      });
 
       const response = await axios.put(
         `${process.env.REACT_APP_DATABASE_URL}/api/attendance-khusus/${type}`,
-        { latitude, longitude, time: currentTime },
+        { latitude, longitude, date: currentDate, time: currentTime },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,9 +75,9 @@ function EmployeeAttendanceKhusus() {
 
       if (type === "checkin") {
         setIsCheckedIn(true);
-        setCheckInTime(currentTime);
+        setCheckInTime(`${currentDate} ${currentTime}`);
       } else {
-        setCheckOutTime(currentTime);
+        setCheckOutTime(`${currentDate} ${currentTime}`);
       }
       setError(null);
     } catch (error) {

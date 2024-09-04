@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Clock from "./Clock";
-import { formatInTimeZone } from "date-fns-tz";
-
-const timeZone = "Asia/Jakarta"; // Tentukan timezone kamu
 
 function EmployeeAttendance() {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
@@ -51,21 +48,24 @@ function EmployeeAttendance() {
     try {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
+
       const token = localStorage.getItem("token");
 
-      // Tangkap waktu sekarang
-      const now = new Date();
+      const currentDate = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD format
+      const currentTime = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }); // HH:MM format
 
-      // Format waktu di timezone yang kamu tentukan menggunakan formatInTimeZone
-      const formattedTime = formatInTimeZone(
-        now,
-        timeZone,
-        "yyyy-MM-dd HH:mm:ss zzzz"
-      );
+      console.log("Sending date and time to backend:", {
+        currentDate,
+        currentTime,
+      });
 
       const response = await axios.put(
         `${process.env.REACT_APP_DATABASE_URL}/api/attendance/${type}`,
-        { latitude, longitude, time: formattedTime },
+        { latitude, longitude, date: currentDate, time: currentTime },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,9 +75,9 @@ function EmployeeAttendance() {
 
       if (type === "checkin") {
         setIsCheckedIn(true);
-        setCheckInTime(formattedTime);
+        setCheckInTime(`${currentDate} ${currentTime}`);
       } else {
-        setCheckOutTime(formattedTime);
+        setCheckOutTime(`${currentDate} ${currentTime}`);
       }
       setError(null);
     } catch (error) {
