@@ -51,11 +51,7 @@ function EmployeeAttendanceKhusus() {
 
       const token = localStorage.getItem("token");
 
-      // Tangkap waktu sekarang secara otomatis
-      const currentTime = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const currentTime = new Date().toISOString().slice(11, 16);
 
       const response = await axios.put(
         `${process.env.REACT_APP_DATABASE_URL}/api/attendance-khusus/${type}`,
