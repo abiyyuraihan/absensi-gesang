@@ -44,19 +44,19 @@ function EmployeeAttendance() {
     });
   };
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const currentDate = now.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    const currentTime = now.toTimeString().split(" ")[0]; // Format: HH:MM:SS
+    return { currentDate, currentTime };
+  };
+
   const handleAttendance = async (type) => {
     try {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
-
+      const { currentDate, currentTime } = getCurrentDateTime();
       const token = localStorage.getItem("token");
-
-      const currentDate = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD format
-      const currentTime = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }); // HH:MM format
 
       console.log("Sending date and time to backend:", {
         currentDate,
